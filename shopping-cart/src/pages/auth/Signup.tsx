@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux"
-import { login } from "../../slices/authSlice"
+import { signup } from "../../slices/authSlice"
 import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
 
@@ -9,10 +9,9 @@ export default function Signup() {
     const dispatch = useDispatch()
 
     const submitHandler = (data: any) => {
-        console.log("click");
-        dispatch(login(data))
+        dispatch(signup(data))
         alert("signup success.")
-        navigate("/login")
+        navigate("/")
     }
 
     return (
