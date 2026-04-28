@@ -1,20 +1,21 @@
 import { useEffect } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { useNavigate, Outlet } from "react-router-dom";
 
 export default function ProtectedRoutes() {
-    const navigate = useNavigate()
+  const navigate = useNavigate();
 
-    const isLoggedIn = localStorage.getItem("credentials");
-    const data = isLoggedIn ? JSON.parse(isLoggedIn) : null;
-    const isAuthenticate = data.isAuthenticate;
+  const stored = localStorage.getItem("credentials");
+  const token = localStorage.getItem("token");
+  const data = stored ? JSON.parse(stored) : null;
+  const isAuthenticated = data?.isAuthenticate;
 
-    useEffect(() => {
-        if (!isAuthenticate) navigate("/login")
-    }, [])
+  useEffect(() => {
+    if (!isAuthenticated || !token) {
+      navigate("/login");
+    }
+  }, [isAuthenticated, navigate]);
 
-    isAuthenticate ? <Outlet/> : null;
-    return (
-        <>
-        </>
-    )
+  if (!isAuthenticated) return null;
+
+  return <Outlet />;
 }

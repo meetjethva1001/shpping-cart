@@ -8,13 +8,13 @@ import Cart from "./pages/Cart";
 import ProtectedRoutes from "./guards/ProtectedRoutes";
 
 function App() {
-  axios.defaults.baseURL = " https://dummyjson.com/products";
+  axios.defaults.baseURL = "https://dummyjson.com/products";
   axios.defaults.withCredentials = true;
   return (
     <>
       <Navbar />
       <Routes>
-        <Route path="/" element={<ProtectedRoutes/> }>
+        <Route element={<ProtectedRoutes/> }>
           <Route path="/" element={<Home />} />
           <Route path="/cart" element={<Cart />} />
         </Route>
