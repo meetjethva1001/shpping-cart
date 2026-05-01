@@ -1,30 +1,39 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    products : localStorage.getItem("products") ? JSON.parse(localStorage.getItem("products")) : []
+    products: localStorage.getItem("products") ? JSON.parse(localStorage.getItem("products")) : []
 }
 
 const addCart = createSlice({
-    name : "productSlice",
-    initialState , 
-    reducers : {
+    name: "productSlice",
+    initialState,
+    reducers: {
         //Add cart
-        addItems : (state : any , actions : any ) =>{
-            const isExists = state.products.find((items:any)=>items.id === actions.payload.id)
-            if(isExists) return alert("Item already added..")
-            state.products.push({...actions.payload});
-            localStorage.setItem("products" , JSON.stringify(state.products));
+        addItems: (state: any, actions: any) => {
+            state.products.push({ ...actions.payload, quantity: 1 });
+            localStorage.setItem("products", JSON.stringify(state.products));
         },
-        removeItems : (state : any , actions : any ) =>{
-            const updatedProducts = state.products.filter((items : any ) => items.id != actions.payload.id);
+        removeItems: (state: any, actions: any) => {
+            const updatedProducts = state.products.filter((items: any) => items.id != actions.payload.id);
             state.products = updatedProducts;
-            localStorage.setItem("products" , JSON.stringify(updatedProducts));
+            localStorage.setItem("products", JSON.stringify(updatedProducts));
         },
-        clearCart : (state : any )=>{
+        clearCart: (state: any) => {
             state.products = []
             localStorage.removeItem("products")
+        },
+        increaseQuantity: (state: any, actions: any) => {
+            const findProduct = state.products.find((items: any) => items.id === actions.payload.id);
+            if (findProduct) findProduct.quantity += 1;
+            localStorage.setItem("products", JSON.stringify(state.products));
+        },
+        decreaseQuantity: (state: any, actions: any) => {
+            const findProduct = state.products.find((items: any) => items.id === actions.payload.id);
+            if (findProduct) findProduct.quantity -= 1;
+            if(findProduct.quantity <= 1) findProduct.quantity = 1;
+            localStorage.setItem("products", JSON.stringify(state.products));
         }
     }
 })
-export const {addItems, removeItems ,clearCart} = addCart.actions;
+export const { addItems, removeItems, clearCart , increaseQuantity ,decreaseQuantity} = addCart.actions;
 export default addCart.reducer; 
