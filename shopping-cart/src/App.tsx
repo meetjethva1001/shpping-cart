@@ -6,6 +6,7 @@ import Signup from "./pages/auth/Signup";
 import Login from "./pages/auth/Login";
 import Cart from "./pages/Cart";
 import ProtectedRoutes from "./guards/ProtectedRoutes";
+import Profile from "./pages/Profile";
 
 function App() {
   axios.defaults.baseURL = "https://dummyjson.com/products";
@@ -17,6 +18,7 @@ function App() {
         <Route element={<ProtectedRoutes/> }>
           <Route path="/" element={<Home />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/profile" element={<Profile/>}/>
         </Route>
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
