@@ -16,10 +16,10 @@ export default function Navbar() {
         navigate("/signup")
     }
 
-    const grandTotal = selector?.products.reduce(
-        (total: number, item: any) => total + item.quantity * item.price,
-        0
-    );
+    // const grandTotal = selector?.products.reduce(
+    //     (total: number, item: any) => total + item.quantity * item.price,
+    //     0
+    // );
 
     return (
         <nav className="w-full shadow-md bg-white fixed">
@@ -54,9 +54,12 @@ export default function Navbar() {
 
                         </div>
                 }
-                 <div className="font-bold">
-                    Grand-total : <span className="bg-red-200 px-1  rounded-xl ">{grandTotal.toFixed(2)}</span>
-                 </div>
+                {/* {
+                    authSelector.isAuthenticate ? <div className="font-bold">
+                        Grand-total : <span className="bg-red-200 px-1  rounded-xl ">{grandTotal.toFixed(2)}</span>
+                    </div> : ""
+                } */}
+
 
             </div>
 
@@ -79,7 +82,11 @@ export default function Navbar() {
                         <div className="flex"><Link to={'/cart'}> <CartIcon value={selector?.products.length} /> </Link></div>
                     </div>
                 }
-                 <div className="bg-green-300">{grandTotal}</div>
+                {/* {
+                    authSelector.isAuthenticate ? <div className="font-bold">
+                        Grand-total : <span className="bg-red-200 px-1  rounded-xl ">{grandTotal.toFixed(2)}</span>
+                    </div> : ""
+                } */}
 
             </div>
 
