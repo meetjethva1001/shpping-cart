@@ -23,7 +23,7 @@ export default function Navbar() {
 
     return (
         <nav className="w-full shadow-md bg-white fixed">
-            <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between"> 
 
                 <div className="text-xl font-bold">
                     ShopEase

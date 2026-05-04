@@ -1,20 +1,35 @@
 import { useDispatch, useSelector } from "react-redux";
 import { decreaseQuantity, increaseQuantity } from "../slices/productSlice";
-import { removeItems } from '../slices/productSlice'
+import { removeItems ,clearCart} from '../slices/productSlice'
+import { useNavigate } from "react-router-dom";
 
 export default function Cart() {
     const cartData = useSelector((state: any) => state.product)
     const dispatch = useDispatch()
+    const navigate = useNavigate()
 
     const grandTotal = cartData?.products.reduce(
         (total: number, item: any) => total + item.quantity * item.price,
         0
     );
 
+    const placeOrder = () => {
+        alert("Order placed successfully!!");
+        const existingProfileProducts = localStorage.getItem("ProfileProducts") ? JSON.parse(localStorage.getItem("ProfileProducts") || "[]") : [];
+        const newProfileProducts = [
+            ...existingProfileProducts,
+            ...cartData.products.map((item: any) => ({
+                ...item,
+                quantity: item.quantity ?? 1,
+            }))
+        ];
+
+        localStorage.setItem("ProfileProducts", JSON.stringify(newProfileProducts));
+        dispatch(clearCart());
+        navigate("/profile");
+    }
     return (
         <div>
-
-            {/* ✅ DESKTOP VIEW */}
             <div className="hidden justify-center items-center w-full flex-wrap gap-10 md:flex">
                 {
                     cartData?.products.length === 0 ? (
@@ -94,20 +109,20 @@ export default function Cart() {
                                 </div>
                             </div>
 
-                            <button className="bg-black text-white px-6 py-2 rounded-md hover:opacity-90 hover:cursor-pointer">
+                            <button onClick={()=>placeOrder()} className="bg-black text-white px-6 py-2 rounded-md hover:opacity-90 hover:cursor-pointer">
                                 Place Order
                             </button>
 
                         </div>
                     </div>
                 )
-            }
+            } 
 
 
             <div className="flex items-center justify-around flex-wrap gap-4 md:hidden">
                 {
                     cartData?.products.length === 0 ? (
-                        <h1 className="text-center w-full mt-10">No items found!!</h1>
+                        <h1 className="text-center w-full mt-55">No items found!!</h1>
                     ) : (
                         cartData?.products.map((item: any, index: any) => {
                             return (
@@ -165,27 +180,32 @@ export default function Cart() {
                     )
                 }
 
-                <div className="m-auto w-[95%] p-10">
-                    <div className="w-full mt-5 bg-white border py-4 px-6 flex items-center justify-between rounded-xl">
+                {
+                    cartData?.products.length === 0 ? " " : (
+                        <div className="m-auto w-[95%] p-10">
+                            <div className="w-full mt-5 bg-white border py-4 px-6 flex items-center justify-between rounded-xl">
 
-                        <div className="flex gap-6 text-gray-700">
-                            <div>
-                                <span className="text-sm">Items</span>
-                                <p className="font-medium">{cartData.products.length}</p>
-                            </div>
+                                <div className="flex gap-6 text-gray-700">
+                                    <div>
+                                        <span className="text-sm">Items</span>
+                                        <p className="font-medium">{cartData.products.length}</p>
+                                    </div>
 
-                            <div>
-                                <span className="text-sm">Total</span>
-                                <p className="font-medium">${grandTotal.toFixed(2)}</p>
+                                    <div>
+                                        <span className="text-sm">Total</span>
+                                        <p className="font-medium">${grandTotal.toFixed(2)}</p>
+                                    </div>
+                                </div>
+
+                                <button className="bg-black text-white px-6 py-2 rounded-md hover:opacity-90 hover:cursor-pointer">
+                                    Place Order
+                                </button>
+
                             </div>
                         </div>
+                    )
+                }
 
-                        <button className="bg-black text-white px-6 py-2 rounded-md hover:opacity-90 hover:cursor-pointer">
-                            Place Order
-                        </button>
-
-                    </div>
-                </div>
 
             </div>
 

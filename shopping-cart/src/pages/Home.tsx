@@ -1,39 +1,45 @@
 import { useQuery } from "@tanstack/react-query"
-import { allProducts, categoryProducts } from "../api/Apis"
+import { allProducts, productsByCategory, categoryProducts } from "../api/Apis"
 import Loader from "../components/Loader";
 import { useDispatch, useSelector } from "react-redux";
 import category from "../categories/categories.json"
 import { addItems, removeItems } from "../slices/productSlice";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Home() {
+    const [currentPage, setCurrentPage] = useState(0);
+    const [searchProducts, setSearchProducts] = useState<string | null>(null);
+
     const { data, isLoading } = useQuery({
-        queryKey: ["fetchProducts"],
-        queryFn: allProducts
+        queryKey: searchProducts ? ["fetchProducts", searchProducts, currentPage] : ["fetchProducts", currentPage],
+        queryFn: searchProducts ? () => productsByCategory(searchProducts, 10, currentPage * 10) : () => allProducts(10, currentPage * 10)
     })
     const loading = isLoading;
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
     const selector = useSelector((state: any) => state.product)
 
-    //-----------------Search products --------------------------
+    //-----------------category products --------------------------
 
-    const [searchProducts, setSearchProducts] = useState<string | null>(null);
     const { data: categories, isLoading: isCategoriesLoading } = useQuery({
         queryKey: ["fetchCategories"],
         queryFn: categoryProducts
     })
 
-    const filteredProducts = searchProducts
-        ? data?.data?.products.filter((product: any) => product.category === searchProducts)
-        : data?.data?.products;
-    console.log(categories?.data, isCategoriesLoading);
+    const products = data?.data?.products;
 
-    //-----------------Search products --------------------------
+    const totalPages = Math.ceil((data?.data?.total || 0) / 10);
+
+    useEffect(() => {
+        setCurrentPage(0);
+    }, [searchProducts]);
+
+    //-----------------category products --------------------------
 
     return (
         <div>
             <div className=" hidden flex items-center justify-around flex-wrap gap-6 md:flex flex-row">
                 <div className="w-full mt-20 flex items-center justify-center gap-4">
+                    <input type="text" placeholder="Search products..." className="border p-2 rounded w-1/2"/>
                     <select name="" className="bg-white border p-2 rounded"
                         value={searchProducts}
                         onChange={(e) => setSearchProducts(e.target.value)}
@@ -48,7 +54,7 @@ export default function Home() {
                 </div>
                 {
                     loading ? <Loader /> :
-                        filteredProducts?.map((product: any, index: any) => {
+                        products?.map((product: any, index: any) => {
                             return (
                                 <div className="h-85 w-80  flex items-center  shadow-xl flex-col rounded-2xl p-5  p-3 mt-15" key={index}>
                                     <div className="h-25 bg-gray-100 rounded-xl w-full">
@@ -90,6 +96,7 @@ export default function Home() {
 
             <div className="flex items-center justify-around flex-wrap gap-4 md:hidden">
                 <div className="w-full mt-50 flex items-center justify-center gap-4">
+                        <input type="text" placeholder="Search products..." className="border p-2 rounded w-1/2"/>
                     <select name="" className="bg-white border p-2 rounded"
                         value={searchProducts}
                         onChange={(e) => setSearchProducts(e.target.value)}
@@ -104,7 +111,7 @@ export default function Home() {
                 </div>
                 {
                     loading ? <Loader /> :
-                       filteredProducts.map((product: any, index: any) => {
+                       products.map((product: any, index: any) => {
                             return (
                                 <div className="h-85 w-80  flex items-center  shadow-xl flex-col rounded-2xl p-5  p-3 mt-50" key={index}>
                                     <div className="h-25 bg-gray-100 rounded-xl w-full">
@@ -134,6 +141,26 @@ export default function Home() {
                         })
                 }
             </div>
+
+            {totalPages > 1 && (
+                <div className="flex justify-center mt-4 gap-4 mb-5">
+                    <button 
+                        onClick={() => setCurrentPage(prev => Math.max(0, prev - 1))} 
+                        disabled={currentPage === 0}
+                        className="px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-300"
+                    >
+                        Previous
+                    </button>
+                    <span className="px-4 py-2">Page {currentPage + 1} of {totalPages}</span>
+                    <button 
+                        onClick={() => setCurrentPage(prev => Math.min(totalPages - 1, prev + 1))} 
+                        disabled={currentPage === totalPages - 1}
+                        className="px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-300"
+                    >
+                        Next
+                    </button>
+                </div>
+            )}
 
         </div>
     )
