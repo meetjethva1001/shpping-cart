@@ -1,10 +1,10 @@
 import { useForm } from "react-hook-form"
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch } from "react-redux"
 import { login } from "../../slices/authSlice"
 import { useNavigate } from "react-router-dom"
 
 export default function Login() {
-    const userData = localStorage.getItem("credentials");
+    const userData = localStorage.getItem("credentials") ? localStorage.getItem("credentials") : null;      
     const jsonData = JSON.parse(userData);
     const navigate = useNavigate()
     const { register, handleSubmit } = useForm()
