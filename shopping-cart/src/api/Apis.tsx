@@ -14,3 +14,8 @@ export const categoryProducts = async () =>{
     const categories = await axios.get("/categories");
     return categories;
 }
+
+export const onlyCategoryProduct = async (category: string) =>{
+    const products = await axios.get(`https://dummyjson.com/products/search?q=${category}`);
+    return products;
+}
