@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { decreaseQuantity, increaseQuantity } from "../slices/productSlice";
-import { removeItems ,clearCart} from '../slices/productSlice'
+import { removeItems, clearCart } from '../slices/productSlice'
 import { useNavigate } from "react-router-dom";
 
 export default function Cart() {
@@ -61,17 +61,17 @@ export default function Cart() {
 
                                     <div className="flex justify-around mt-3 items-center w-full">
                                         <div className="flex gap-2">
-                                            <button
-                                                className="bg-gray-200 rounded px-1 hover:cursor-pointer"
-                                                onClick={() => dispatch(increaseQuantity(item))}
-                                            >+</button>
-
-                                            <div className="bg-gray-100">{item.quantity}</div>
 
                                             <button
                                                 className="bg-gray-200 rounded px-1 hover:cursor-pointer"
                                                 onClick={() => dispatch(decreaseQuantity(item))}
                                             >-</button>
+                                            <div className="bg-gray-100">{item.quantity}</div>
+
+                                            <button
+                                                className="bg-gray-200 rounded px-1 hover:cursor-pointer"
+                                                onClick={() => dispatch(increaseQuantity(item))}
+                                            >+</button>
                                         </div>
 
                                         <strong>
@@ -109,14 +109,14 @@ export default function Cart() {
                                 </div>
                             </div>
 
-                            <button onClick={()=>placeOrder()} className="bg-black text-white px-6 py-2 rounded-md hover:opacity-90 hover:cursor-pointer">
+                            <button onClick={() => placeOrder()} className="bg-black text-white px-6 py-2 rounded-md hover:opacity-90 hover:cursor-pointer">
                                 Place Order
                             </button>
 
                         </div>
                     </div>
                 )
-            } 
+            }
 
 
             <div className="flex items-center justify-around flex-wrap gap-4 md:hidden">

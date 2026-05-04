@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import CartIcon from "./CartIcon";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../slices/authSlice";
@@ -31,8 +31,22 @@ export default function Navbar() {
 
 
                 <div className="hidden md:flex items-center gap-6 text-gray-700">
-                    <Link to="/" className="block">Home</Link>
-                    <Link to="/profile" className="block">Profile</Link>
+                    <NavLink
+                        to="/"
+                        className={({ isActive }) =>
+                            `block px-3 py-1 rounded-lg ${isActive ? 'bg-black text-white' : 'text-gray-700 hover:bg-gray-100'}`
+                        }
+                    >
+                        Home
+                    </NavLink>
+                    <NavLink
+                        to="/profile"
+                        className={({ isActive }) =>
+                            `block px-3 py-1 rounded-lg ${isActive ? 'bg-black text-white' : 'text-gray-700 hover:bg-gray-100'}`
+                        }
+                    >
+                        Profile
+                    </NavLink>
                 </div>
 
 
@@ -64,8 +78,22 @@ export default function Navbar() {
             </div>
 
             <div className="md:hidden px-4 pb-4 space-y-2 text-gray-700">
-                <Link to="/" className="block">Home</Link>
-                <Link to="/profile" className="block">Profile</Link>
+                <NavLink
+                    to="/"
+                    className={({ isActive }) =>
+                        `block px-3 py-2 rounded-lg ${isActive ? 'bg-black text-white' : 'hover:bg-gray-100'}`
+                    }
+                >
+                    Home
+                </NavLink>
+                <NavLink
+                    to="/profile"
+                    className={({ isActive }) =>
+                        `block px-3 py-2 rounded-lg ${isActive ? 'bg-black text-white' : 'hover:bg-gray-100'}`
+                    }
+                >
+                    Profile
+                </NavLink>
 
                 {
                     authSelector.isAuthenticate ? <div className=" md:flex items-center gap-4"><button className="px-4 py-1 bg-black text-white rounded-lg hover:cursor-pointer"
