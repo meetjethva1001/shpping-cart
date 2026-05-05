@@ -7,6 +7,7 @@ import Login from "./pages/auth/Login";
 import Cart from "./pages/Cart";
 import ProtectedRoutes from "./guards/ProtectedRoutes";
 import Profile from "./pages/Profile";
+import { ToastContainer, Bounce } from "react-toastify";
 
 function App() {
   axios.defaults.baseURL = "https://dummyjson.com/products";
@@ -24,6 +25,20 @@ function App() {
           <Route path="/login" element={<Login />} />
 
       </Routes>
+      <ToastContainer
+        position="top-right"
+        autoClose={1500}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Bounce}
+        aria-label="toast-container"
+      />
     </>
   )
 }

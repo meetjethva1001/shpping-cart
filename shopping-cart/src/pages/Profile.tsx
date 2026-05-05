@@ -4,7 +4,6 @@ export default function Profile() {
     const { name, email } = useSelector((state: any) => state.auth);
     const storedProducts = localStorage.getItem("ProfileProducts") ? JSON.parse(localStorage.getItem("ProfileProducts") || "[]") : [];
     const products = Array.isArray(storedProducts) ? storedProducts : [storedProducts];
-    console.log(products);
     return (
         <div className="min-h-screen flex flex-col items-center justify-center p-4 gap-6 ">
 
