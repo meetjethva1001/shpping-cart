@@ -60,13 +60,13 @@ export default function Signup() {
             <div className="">
                 <form className="bg-gray-100 flex justify-center flex-col p-10 rounded-xl" onSubmit={handleSubmit(submitHandler)}>
                     <input type="text" placeholder="Name" className="border p-1 rounded bg-gray-200"  {...register("name", allValidators.nameValidator)} />
-                    {errors.name && <span className="text-red-500 text-sm">{errors?.name?.message}</span>}
+                    {errors.name && <span className="text-red-500 text-sm">{String(errors.name?.message)}</span>}
                     <br />
                     <input type="email" placeholder="Email" className="border p-1 rounded bg-gray-200"  {...register("email", allValidators.emailValidator)} />
-                    {errors.email && <span className="text-red-500 text-sm">{errors?.email?.message}</span>}
+                    {errors.email && <span className="text-red-500 text-sm">{String(errors.email?.message)}</span>}
                     <br />
                     <input type="password" placeholder="password" className="border p-1 rounded bg-gray-200"  {...register("password", allValidators.passwordValidator)} />
-                    {errors.password && <span className="text-red-500 text-sm">{errors?.password?.message}</span>}
+                    {errors.password && <span className="text-red-500 text-sm">{String(errors.password?.message)}</span>}
                     <br />
                     <button type="submit" value="Submit" className="rounded p-2 bg-green-300 rounded hover:cursor-pointer hover:bg-green-400"
                     >Submit</button>
