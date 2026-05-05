@@ -2,9 +2,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { decreaseQuantity, increaseQuantity } from "../slices/productSlice";
 import { removeItems, clearCart } from '../slices/productSlice'
 import { useNavigate } from "react-router-dom";
+import { Bounce, toast } from "react-toastify";
 
 export default function Cart() {
-    const cartData = useSelector((state: any) => state.product)
+    const cartData = useSelector((state: any) => state.product);
+
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
@@ -14,22 +16,36 @@ export default function Cart() {
     );
 
     const placeOrder = () => {
-        alert("Order placed successfully!!");
-        const existingProfileProducts = localStorage.getItem("ProfileProducts") ? JSON.parse(localStorage.getItem("ProfileProducts") || "[]") : [];
-        const newProfileProducts = [
-            ...existingProfileProducts,
-            ...cartData.products.map((item: any) => ({
-                ...item,
-                quantity: item.quantity ?? 1,
-            }))
-        ];
+        toast.success('Item added successfully!', {
+            position: "top-right",
+            autoClose: 1500,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            transition: Bounce,
+        });
 
-        localStorage.setItem("ProfileProducts", JSON.stringify(newProfileProducts));
-        dispatch(clearCart());
-        navigate("/profile");
+        setTimeout(() => {
+            const existingProfileProducts = localStorage.getItem("ProfileProducts") ? JSON.parse(localStorage.getItem("ProfileProducts") || "[]") : [];
+            const newProfileProducts = [
+                ...existingProfileProducts,
+                ...cartData.products.map((item: any) => ({
+                    ...item,
+                    quantity: item.quantity ?? 1,
+                }))
+            ];
+
+            localStorage.setItem("ProfileProducts", JSON.stringify(newProfileProducts));
+            dispatch(clearCart());
+            navigate("/profile");
+        }, 2000);
     }
     return (
         <div>
+
             <div className="hidden justify-center items-center w-full flex-wrap gap-10 md:flex">
                 {
                     cartData?.products.length === 0 ? (

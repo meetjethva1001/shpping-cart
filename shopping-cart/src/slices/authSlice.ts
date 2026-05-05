@@ -35,7 +35,6 @@ const authSlice = createSlice({
             state.name = null;
             state.password = null;
             state.isAuthenticate = false;
-            console.log("click");
             localStorage.clear()
         }
     }
