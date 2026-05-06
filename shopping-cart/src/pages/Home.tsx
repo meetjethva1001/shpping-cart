@@ -3,7 +3,7 @@ import { allProducts, productsByCategory, onlyCategoryProduct } from "../api/Api
 import Loader from "../components/Loader";
 import { useDispatch, useSelector } from "react-redux";
 import category from "../categories/categories.json";
-import { addItems, removeItems } from "../slices/productSlice";
+import { addItems, decreaseQuantity, increaseQuantity, removeItems } from "../slices/productSlice";
 import { useState, useEffect } from "react";
 
 export default function Home() {
@@ -17,42 +17,41 @@ export default function Home() {
     const { data, isLoading } = useQuery({
         queryKey: ["products", searchQuery, categoryFilter, currentPage],
         queryFn: () => {
-            
+
             if (searchQuery) {
                 return onlyCategoryProduct(searchQuery);
             }
 
             if (categoryFilter) {
-                return productsByCategory(categoryFilter, 10, currentPage * 10);
+                return productsByCategory(categoryFilter, 12, currentPage * 12);
             }
 
-            return allProducts(10, currentPage * 10);
+            return allProducts(12, currentPage * 12);
         }
     });
-
     const products = data?.data?.products || [];
-    const totalPages = Math.ceil((data?.data?.total || 0) / 10);
-
+    const totalPages = Math.ceil((data?.data?.total || 0) / 12);
+   
     // Reset page when filters change
     useEffect(() => {
         setCurrentPage(0);
     }, [searchQuery, categoryFilter]);
 
     return (
-        <div>
+        <div className="pt-20">
 
             <div className="w-full flex justify-center px-4 ">
-                <div className="flex flex-col sm:flex-row gap-3 w-full max-w-3xl mt-21">
+                <div className="flex flex-col sm:flex-row gap-3 w-full max-w-3xl mt-4">
                     <input
                         type="text"
                         placeholder="Search products..."
-                        className="border p-2 rounded w-full sm:w-2/3"
+                        className="border p-2 rounded w-full sm:w-2/3 text-sm"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                     />
 
                     <select
-                        className="bg-white border p-2 rounded w-full sm:w-1/3"
+                        className="bg-white border p-2 rounded w-full sm:w-1/3 text-sm"
                         value={categoryFilter}
                         onChange={(e) => setCategoryFilter(e.target.value)}
                     >
@@ -68,14 +67,14 @@ export default function Home() {
             </div>
 
 
-            <div className="flex flex-wrap justify-center items-center mt-6 gap-6 px-4">
+            <div className="flex flex-wrap justify-center items-center mt-6 gap-4 sm:gap-6 px-4">
                 {isLoading ? (
                     <div className="flex items-center justify-center"><Loader /></div>
                 ) : (
                     products.map((product: any) => (
                         <div
                             key={product.id}
-                            className="w-full max-w-sm mx-auto shadow-xl rounded-2xl p-4 flex flex-col"
+                            className="w-full sm:max-w-sm mx-auto shadow-xl rounded-2xl p-4 flex flex-col"
                         >
                             <div className="h-32 bg-gray-100 rounded-xl w-full">
                                 <img
@@ -105,32 +104,58 @@ export default function Home() {
                                 {product.description}
                             </div>
 
-                            <div className="flex justify-between items-center mt-4">
+                            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mt-4">
                                 <strong className="text-sm">
-                                    ${product.price}
+                                    ${(() => {
+                                        const cartItem = selector.products.find(
+                                            (item: any) => item.id === product.id
+                                        );
+                                        return cartItem ? (cartItem.quantity * product.price).toFixed(2) : product.price.toFixed(2);
+                                    })()}
                                 </strong>
 
-                                {selector.products.find(
-                                    (item: any) => item.id === product.id
-                                ) ? (
-                                    <button
-                                        className="px-2 py-1 bg-red-400 text-white rounded text-xs"
-                                        onClick={() => dispatch(removeItems(product))}
-                                    >
-                                        Remove
-                                    </button>
-                                ) : (
-                                    <button
-                                        className="px-2 py-1 bg-gray-400 text-white rounded text-xs hover:bg-gray-500 hover:cursor-pointer"
-                                        onClick={() => dispatch(addItems(product))}
-                                    >
-                                        Add Item
-                                    </button>
-                                )}
+                                {(() => {
+                                    const cartItem = selector.products.find(
+                                        (item: any) => item.id === product.id
+                                    );
+
+                                    return cartItem ? (
+                                        <div className="flex flex-wrap gap-2 items-center w-full sm:w-auto">
+                                            <button
+                                                className="bg-gray-200 rounded px-2 py-1 hover:cursor-pointer text-sm"
+                                                onClick={() => dispatch(decreaseQuantity({ id: product.id }))}
+                                            >-</button>
+
+                                            <div className="bg-gray-100 px-3 py-1 rounded text-sm">{cartItem.quantity}</div>
+
+                                            <button
+                                                className="bg-gray-200 rounded px-2 py-1 hover:cursor-pointer text-sm"
+                                                onClick={() => dispatch(increaseQuantity({ id: product.id }))}
+                                            >+</button>
+
+                                            <button
+                                                className="px-2 py-1 bg-red-400 text-white rounded text-xs hover:bg-red-600 hover:cursor-pointer w-full sm:w-auto"
+                                                onClick={() => dispatch(removeItems({ id: product.id }))}
+                                            >
+                                                Remove
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <button
+                                            className="px-3 py-1 bg-gray-400 text-white rounded text-xs hover:bg-gray-500 hover:cursor-pointer w-full sm:w-auto"
+                                            onClick={() => dispatch(addItems(product))}
+                                        >
+                                            Add Item
+                                        </button>
+                                    );
+                                })()}
+
                             </div>
+
                         </div>
                     ))
                 )}
+
             </div>
 
 
