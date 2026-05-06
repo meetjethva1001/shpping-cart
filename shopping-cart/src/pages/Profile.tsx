@@ -1,53 +1,15 @@
-import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+
 
 export default function Profile() {
-    const { name, email } = useSelector((state: any) => state.auth);
+   
     const storedProducts = localStorage.getItem("ProfileProducts") ? JSON.parse(localStorage.getItem("ProfileProducts") || "[]") : [];
     const products = Array.isArray(storedProducts) ? storedProducts : [storedProducts];
     return (
         <div className="min-h-screen flex flex-col items-center justify-center p-4 gap-6 ">
 
-            <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-6 mt-5">
-
-                <div className="flex flex-row items-center justify-around w-full">
-                    <div className="w-6 h-6 mt-5 rounded-full bg-black text-white flex items-center justify-center text-xl font-bold">
-                        {name ? name.charAt(0).toUpperCase() : "U"}
-                    </div>
-
-                    <h2 className="mt-4 text-sm font-semibold">
-                        {name || "User Name"}
-                    </h2>
-
-                    <p className="text-gray-500 text-sm mt-4">
-                        {email || "user@email.com"}
-                    </p>
-                </div>
-
-                
-
-                {/* <div className="space-y-4 mt-5">
-
-                    <div className="flex justify-between">
-                        <span className="text-gray-500">Name</span>
-                        <span className="font-medium">{name || "N/A"}</span>
-                    </div>
-
-                    <div className="flex justify-between">
-                        <span className="text-gray-500">Email</span>
-                        <span className="font-medium">{email || "N/A"}</span>
-                    </div>
-
-                    <div className="flex justify-between">
-                        <span className="text-gray-500">Password</span>
-                        <span className="font-medium">••••••••</span>
-                    </div>
-
-                </div> */}
-
-            </div>
-
-            {products.length > 0 && (
-                <div className="w-full max-w-2xl bg-white rounded-2xl shadow-lg p-5">
+            {products.length > 0 ? (
+                <div className="w-full max-w-2xl bg-white rounded-2xl shadow-lg p-5 mt-3">
                     <h3 className="text-base font-semibold text-gray-700 mb-4">Your Purchases</h3>
                     <div className="flex flex-col gap-3">
                         {products.map((item: any, index: number) => (
@@ -72,6 +34,11 @@ export default function Profile() {
                         </div>
                     </div>
                 </div>
+            ) : (
+                <div className="text-center text-gray-500">
+                    <p>No purchases found, please make a purchase.</p>
+                    <Link to="/" className="text-blue-500 hover:text-blue-700 underline">Shop Now</Link>
+                </div>  
             )}
 
         </div>
