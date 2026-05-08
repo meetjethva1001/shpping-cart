@@ -47,13 +47,21 @@ export default function Cart() {
             navigate("/profile");
         }, 2000);
     }
+
+    const removeItem = (item: any) => {
+        const confirmation = window.confirm("Are you sure you want to remove this item?");
+        if (confirmation) {
+            dispatch(removeItems(item));
+        } else { return;
+        }
+    }
     return (
         <div>
 
             <div className="hidden justify-center items-center w-full flex-wrap gap-10 md:flex">
                 {
                     cartData?.products.length === 0 ? (
-                        <h1 className="mt-20">No items found , please add some items to your cart.</h1>
+                        <h1 className="mt-25">No items found , please add some items to your cart.</h1>
                     ) : (
                         cartData?.products.map((item: any, index: any) => {
                             return (
@@ -101,7 +109,7 @@ export default function Cart() {
 
                                     <button
                                         className="bg-red-200 px-1 mt-2 rounded w-full py-1 hover:cursor-pointer"
-                                        onClick={() => dispatch(removeItems(item))}
+                                        onClick={() => removeItem(item)}
                                     >
                                         Remove item
                                     </button>
