@@ -3,6 +3,7 @@ import { allProducts, productsByCategory, onlyCategoryProduct } from "../api/Api
 import Loader from "../components/Loader";
 import { useDispatch, useSelector } from "react-redux";
 import category from "../categories/categories.json";
+import Swal from 'sweetalert2'
 import { addItems, decreaseQuantity, increaseQuantity, removeItems } from "../slices/productSlice";
 import { useState, useEffect } from "react";
 
@@ -12,7 +13,7 @@ export default function Home() {
     const [categoryFilter, setCategoryFilter] = useState("");
 
     const dispatch = useDispatch();
-    const selector = useSelector((state: any) => state.product);
+    const selector = useSelector((state: any) => state.product);      
 
     const { data, isLoading } = useQuery({
         queryKey: ["products", searchQuery, categoryFilter, currentPage],
@@ -37,6 +38,17 @@ export default function Home() {
         setCurrentPage(0);
     }, [searchQuery, categoryFilter]);
 
+    const removeItem = (item: any) => {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to remove this item from the cart?",
+        }) .then((result) => {
+            if (result.isConfirmed) {
+                dispatch(removeItems(item));
+                Swal.fire('Removed!', 'The item has been removed from your cart.', 'success');
+            }
+        });
+    }
     return (
         <div className="pt-20">
 
@@ -135,7 +147,7 @@ export default function Home() {
 
                                             <button
                                                 className="px-2 py-1 bg-red-400 text-white rounded text-xs hover:bg-red-600 hover:cursor-pointer w-full sm:w-auto"
-                                                onClick={() => dispatch(removeItems({ id: product.id }))}
+                                                onClick={() => removeItem({ id: product.id })}
                                             >
                                                 Remove
                                             </button>
